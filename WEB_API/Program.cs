@@ -1,4 +1,7 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using WEB_API;
 using WebApi.Persistence;
 using WebApi.Repository.Implementation;
 using WebApi.Repository.Interfaces;
@@ -16,6 +19,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+//DI way2
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory()).
+    ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterModule(new AutofacModule());
+}); ;
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
